@@ -1,0 +1,11 @@
+@{
+  Layout = "Shared/_Layout.cshtml";
+}
+
+<h2>@Model.GetName()</h2>
+
+<a href="/restaurant/update/@Model.GetRestId()">Update</a>
+<form class="" action="/restaurant/delete/@Model.GetRestId()" method="post">
+  <input type="hidden" name="_method" value="DELETE">
+  <button type="submit">Delete</button>
+</form>

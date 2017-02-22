@@ -1,0 +1,13 @@
+@{
+  Layout = "Shared/_Layout.cshtml";
+}
+
+<h1>Yip</h1>
+<hr/>
+<h2>Are you sure you want to delete @Model.GetName() and all of its Restaurants?</h2>
+<h4>@Model.GetName()</h4>
+<form action="/cuisine/delete/@Model.GetId()" method="post">
+  <input type="hidden" name="_method" value="DELETE">
+  <button type="submit">Delete</button>
+</form>
+<p><a href="/" class="btn">Back home</a></p>

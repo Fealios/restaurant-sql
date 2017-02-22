@@ -1,0 +1,16 @@
+@{
+  Layout = "Shared/_Layout.cshtml";
+}
+
+@foreach(var restaurant in Model.GetRestaurants())
+{
+  <li><a href="/restaurant/@restaurant.GetRestId()">@restaurant.GetName()</a></li>
+}
+
+<form action="/cuisine/add/@Model.GetId()" method="post">
+  <label for="restaurant-name">Restaurant Name</label>
+  <input type="text" name="restaurant-name">
+  <button type="submit" name="button" cl ss="btn">Add Restaurant</button>
+</form>
+
+<p><a href="/" class="btn">Back home</a></p>
