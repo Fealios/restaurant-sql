@@ -209,5 +209,47 @@ namespace RestaurantApp.Objects
      }
 
 
+
+     public static List<Review> GetReviews(int id)
+     {
+       SqlConnection conn = DB.Connection();
+       conn.Open();
+
+       SqlCommand cmd = new SqlCommand("SELECT * FROM reviews WHERE restaurant_id = @Restaurant_Id;", conn);
+       SqlParameter restaurantIdParameter = new SqlParameter("@Restaurant_Id", id);
+       cmd.Parameters.Add(restaurantIdParameter);
+       SqlDataReader rdr = cmd.ExecuteReader();
+
+       int foundReviewId = 0;
+       string foundReviewDescription = null;
+       int foundRestaurantId = 0;
+       int foundRating = 0;
+
+       List<Review> allReviews = new List<Review> {};
+
+       while(rdr.Read())
+       {
+         foundReviewId = rdr.GetInt32(0);
+         foundReviewDescription = rdr.GetString(1);
+         foundRestaurantId = rdr.GetInt32(2);
+         foundRating = rdr.GetInt32(3);
+
+         Review foundReview = new Review(foundReviewDescription, foundRestaurantId, foundRating, foundReviewId);
+
+         allReviews.Add(foundReview);
+       }
+
+       if (rdr != null)
+       {
+         rdr.Close();
+       }
+       if (conn != null)
+       {
+         conn.Close();
+       }
+
+       return allReviews;
+     }
+
   }
 }

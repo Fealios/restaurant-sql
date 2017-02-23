@@ -1,0 +1,36 @@
+@{
+  Layout = "Shared/_Layout.cshtml";
+}
+
+<ul>
+  @foreach(var review in Model["reviews"])
+  {
+    <li>@review.GetReview()</li>
+  }
+</ul>
+
+
+<div class="row">
+    <form class="col s12" action='/restaurant/@Model["restId"][0].GetRestId()/reviews' method="post">
+      <div class="row">
+        <div class="input-field col s9">
+          <input type="text" name="review">
+          <label for="review">Review</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <select>
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+          <label>Materialize Select</label>
+        </div>
+
+      </div>
+      <br>
+      <button type="submit" class="btn-large">Submit Review</button>
+    </form>
+  </div>

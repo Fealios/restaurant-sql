@@ -27,15 +27,15 @@ namespace RestaurantApp
     [Fact]
     public void Test_Equal_ReturnsTrueIfNamesAreTheSame()
     {
-      Review firstReview = new Review("This Blows", 2, 1);
-      Review secondReview = new Review("This Blows", 2, 1);
+      Review firstReview = new Review("This Blows", 2, 4, 1);
+      Review secondReview = new Review("This Blows", 2, 4, 1);
     Assert.Equal(firstReview, secondReview);
     }
 
     [Fact]
     public void Test_Save_ReturnsSavedReview()
     {
-      Review testReview = new Review("McDonalds", 2);
+      Review testReview = new Review("McDonalds", 2, 4);
       testReview.Save();
 
       List<Review> totalReviews = Review.GetAll();
@@ -47,7 +47,7 @@ namespace RestaurantApp
     [Fact]
     public void Test_Save_AssignsIdToObject()
     {
-      Review testReview = new Review("this makes me want to retch", 2);
+      Review testReview = new Review("this makes me want to retch", 2, 4);
 
       testReview.Save();
       Review savedReview = Review.GetAll()[0];
@@ -62,7 +62,7 @@ namespace RestaurantApp
     public void Test_FindFindsReviewInDatabase()
     {
       //Arrange
-      Review testReview = new Review("This restaurant is garbage", 2);
+      Review testReview = new Review("This restaurant is garbage", 2, 4);
       testReview.Save();
 
       //Act
@@ -72,9 +72,35 @@ namespace RestaurantApp
       Assert.Equal(testReview, foundReview);
     }
 
+    [Fact]
+    public void Test_FindAllReviewsForRestaurant()
+    {
+      Review testReview = new Review("This blows", 1, 4);
+      testReview.Save();
+
+      List<Review> testList = Restaurant.GetReviews(1);
+      List<Review> compareList = new List<Review> {testReview};
+
+      Assert.Equal(testList, compareList);
+    }
+
+    [Fact]
+    public void Test_FindRestaurantName()
+    {
+      Restaurant testRest = new Restaurant("Mcdonalds", 2, 4);
+      testRest.Save();
+
+      Review testReview = new Review("This gave me Diarrhea", testRest.GetRestId(), 4);
+      string testName = testReview.GetRestName();
+      string name = "Mcdonalds";
+
+      Assert.Equal(name, testName);
+    }
+
     public void Dispose()
     {
       Review.DeleteAll();
+      Restaurant.DeleteAll();
     }
 
   }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Nancy;
 using Nancy.ViewEngines.Razor;
 using RestaurantApp.Objects;
+using System.Linq;
 
 namespace RestaurantApp
 {
@@ -78,6 +79,41 @@ namespace RestaurantApp
         Cuisine foundCuisine = Cuisine.Find(foundRestaurant.GetCuisId());
         return View["indivCuisine.cshtml", foundCuisine];
       };
+
+      Get["/restaurant/{id}/reviews"] = parameter => {
+        Restaurant tempRestaurant = Restaurant.Find(parameter.id);
+        List<Review> reviewList = Restaurant.GetReviews(parameter.id);
+        Review restId = new Review("rest id", parameter.id, 4);
+        List<Review> restIdList = new List<Review>{restId};
+
+        Dictionary<string, List<Review>> passThrough = new Dictionary<string, List<Review>>{};
+        passThrough.Add("reviews", reviewList);
+        passThrough.Add("restId", restIdList);
+        return View["reviewForm.cshtml", passThrough];
+      };
+
+      Post["/restaurant/{id}/reviews"] = parameter =>
+      {
+        Review newReview = new Review(Request.Form["review"], parameter.id, Request.Form["rating"]);
+        newReview.Save();
+
+        List<Review> reviewList = Restaurant.GetReviews(parameter.id);
+        Review restId = new Review("rest id", parameter.id, 4);
+        List<Review> restIdList = new List<Review>{restId};
+
+        Dictionary<string, List<Review>> passThrough = new Dictionary<string, List<Review>>{};
+        passThrough.Add("reviews", reviewList);
+        passThrough.Add("restId", restIdList);
+
+        return View["reviewForm.cshtml", passThrough];
+      };
+
+      Get["/all-restaurants"] = _ =>{
+        List<Restaurant> allRestaurants = Restaurant.GetAll();
+        var sortedList = allRestaurants.OrderBy(Restaurant => Restaurant.GetName());
+        return View["all-restaurants.cshtml", sortedList];
+      };
+
 
     }
   }

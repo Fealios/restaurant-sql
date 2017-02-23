@@ -2,6 +2,8 @@
   Layout = "Shared/_Layout.cshtml";
 }
 
+@{int restId = Model.GetRestId();}
+
 <h2>@Model.GetName()</h2>
 
 <a href="/restaurant/update/@Model.GetRestId()">Update</a>
@@ -9,3 +11,5 @@
   <input type="hidden" name="_method" value="DELETE">
   <button type="submit">Delete</button>
 </form>
+
+<a href="/restaurant/@Model.GetRestId()/reviews" class="btn-large">Reviews</a>

@@ -9,12 +9,14 @@ namespace RestaurantApp.Objects
     private int _id;
     private string _description;
     private int _restaurantId;
+    private int _rating;
 
-    public Review(string description, int restaurantId, int id=0)
+    public Review(string description, int restaurantId, int rating, int id=0)
     {
       _description = description;
       _restaurantId = restaurantId;
       _id = id;
+      _rating = rating;
     }
 
     public int GetRevId()
@@ -32,6 +34,11 @@ namespace RestaurantApp.Objects
       return _restaurantId;
     }
 
+    public int GetRating()
+    {
+      return _rating;
+    }
+
     public override bool Equals(System.Object otherReview)
     {
       if (!(otherReview is Review))
@@ -44,8 +51,41 @@ namespace RestaurantApp.Objects
         bool revIdEquality = (this.GetRevId() == newReview.GetRevId());
         bool descEquality = (this.GetReview() == newReview.GetReview());
         bool restIdEquality = (this.GetRestId() == newReview.GetRestId());
-        return (restIdEquality && descEquality && restIdEquality);
+        bool ratingEquality = (this.GetRating() == newReview.GetRating());
+        return (restIdEquality && descEquality && restIdEquality && ratingEquality);
       }
+    }
+
+    public string GetRestName()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM restaurants WHERE id = @Restaurant_id;", conn);
+
+      SqlParameter restNameParameter = new SqlParameter("@Restaurant_id", this.GetRestId());
+
+      cmd.Parameters.Add(restNameParameter);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      string restName = null;
+
+      while(rdr.Read())
+      {
+        restName = rdr.GetString(1);
+      }
+
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(conn != null)
+      {
+        conn.Close();
+      }
+
+      return restName;
     }
 
     public static List<Review> GetAll()
@@ -63,7 +103,8 @@ namespace RestaurantApp.Objects
         int reviewId = rdr.GetInt32(0);
         string description = rdr.GetString(1);
         int restaurantId = rdr.GetInt32(2);
-        Review newReview = new Review(description, restaurantId, reviewId);
+        int rating = rdr.GetInt32(3);
+        Review newReview = new Review(description, restaurantId, rating, reviewId);
         allReviews.Add(newReview);
       }
       if(rdr != null)
@@ -82,14 +123,17 @@ namespace RestaurantApp.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO reviews (description, restaurant_id) OUTPUT INSERTED.id VALUES(@ReviewDescription, @Restaurant_Id);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO reviews (description, restaurant_id, ratings) OUTPUT INSERTED.id VALUES(@ReviewDescription, @Restaurant_Id, @Rating);", conn);
 
       SqlParameter reviewParameter = new SqlParameter("@ReviewDescription", this.GetReview());
 
       SqlParameter restaurantIdParameter = new SqlParameter("@Restaurant_Id", this.GetRestId());
 
+      SqlParameter ratingParameter = new SqlParameter("@Rating", this.GetRating());
+
       cmd.Parameters.Add(reviewParameter);
       cmd.Parameters.Add(restaurantIdParameter);
+      cmd.Parameters.Add(ratingParameter);
 
       SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -120,14 +164,16 @@ namespace RestaurantApp.Objects
       int foundReviewId = 0;
       string foundReviewDescription = null;
       int foundRestaurantId = 0;
+      int foundRating = 0;
 
       while(rdr.Read())
       {
         foundReviewId = rdr.GetInt32(0);
         foundReviewDescription = rdr.GetString(1);
         foundRestaurantId = rdr.GetInt32(2);
+        foundRating = rdr.GetInt32(3);
       }
-      Review foundReview = new Review(foundReviewDescription, foundRestaurantId, foundReviewId);
+      Review foundReview = new Review(foundReviewDescription, foundRestaurantId, foundRating, foundReviewId);
 
       if (rdr != null)
       {
