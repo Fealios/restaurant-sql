@@ -32,45 +32,45 @@ namespace RestaurantApp
     Assert.Equal(firstReview, secondReview);
     }
 
-    // [Fact]
-    // public void Test_Save_ReturnsSavedRestaurant()
-    // {
-    //   Restaurant testRestaurant = new Restaurant("McDonalds", 2);
-    //   testRestaurant.Save();
-    //
-    //   List<Restaurant> totalRestaurants = Restaurant.GetAll();
-    //   List<Restaurant> testRestaurants = new List<Restaurant>{testRestaurant};
-    //
-    //   Assert.Equal(testRestaurants, totalRestaurants);
-    // }
-    //
-    // [Fact]
-    // public void Test_Save_AssignsIdToObject()
-    // {
-    //   Restaurant testRestaurant = new Restaurant("Mcdonalds", 2);
-    //
-    //   testRestaurant.Save();
-    //   Restaurant savedRestaurant = Restaurant.GetAll()[0];
-    //
-    //   int result = savedRestaurant.GetRestId();
-    //   int testId = testRestaurant.GetRestId();
-    //   Assert.Equal(testId, result);
-    // }
-    //
-    //
-    // [Fact]
-    // public void Test_FindFindsRestaurantInDatabase()
-    // {
-    //   //Arrange
-    //   Restaurant testRestaurant = new Restaurant("Wendy's", 2);
-    //   testRestaurant.Save();
-    //
-    //   //Act
-    //   Restaurant foundRestaurant = Restaurant.Find(testRestaurant.GetRestId());
-    //
-    //   //Assert
-    //   Assert.Equal(testRestaurant, foundRestaurant);
-    // }
+    [Fact]
+    public void Test_Save_ReturnsSavedReview()
+    {
+      Review testReview = new Review("McDonalds", 2);
+      testReview.Save();
+
+      List<Review> totalReviews = Review.GetAll();
+      List<Review> testReviews = new List<Review>{testReview};
+
+      Assert.Equal(testReviews, totalReviews);
+    }
+
+    [Fact]
+    public void Test_Save_AssignsIdToObject()
+    {
+      Review testReview = new Review("this makes me want to retch", 2);
+
+      testReview.Save();
+      Review savedReview = Review.GetAll()[0];
+
+      int result = savedReview.GetRestId();
+      int testId = testReview.GetRestId();
+      Assert.Equal(testId, result);
+    }
+
+
+    [Fact]
+    public void Test_FindFindsReviewInDatabase()
+    {
+      //Arrange
+      Review testReview = new Review("This restaurant is garbage", 2);
+      testReview.Save();
+
+      //Act
+      Review foundReview = Review.Find(testReview.GetRevId());
+
+      //Assert
+      Assert.Equal(testReview, foundReview);
+    }
 
     public void Dispose()
     {
