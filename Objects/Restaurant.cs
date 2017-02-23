@@ -188,7 +188,7 @@ namespace RestaurantApp.Objects
 
        SqlParameter restaurantIdParameter = new SqlParameter();
        restaurantIdParameter.ParameterName = "@RestaurantId";
-       restaurantIdParameter.Value = this.GetId();
+       restaurantIdParameter.Value = this.GetRestId();
        cmd.Parameters.Add(restaurantIdParameter);
        SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -201,7 +201,7 @@ namespace RestaurantApp.Objects
        {
          rdr.Close();
        }
- 
+
        if (conn != null)
        {
          conn.Close();
